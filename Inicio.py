@@ -164,10 +164,10 @@ st.markdown("""
     </p>
     <ul style="list-style-type: none; padding-left: 0; margin-bottom: 1.5rem; font-family: 'Segoe UI', Arial, sans-serif;">
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Cual es la ley que determina los Manuales de convivencia?</span>
+            <span style="font-weight: 500; color: #BBDEFB;">¿¿Cuáles son los objetivos principales de la Ley 1620 de 2013?</span>
         </li>
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Que se debe hacer en el caso de una pelea entre estudiantes?</span>
+            <span style="font-weight: 500; color: #BBDEFB;">¿cuál es la definición y el propósito principal del Manual de Convivencia?</span>
         </li>
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
             <span style="font-weight: 500; color: #BBDEFB;">¿Que sanciones implica el agredir a un compañero?</span>
