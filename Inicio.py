@@ -10,8 +10,8 @@ import tempfile
 
 # Configuración de la página sin el parámetro theme (compatible con versiones anteriores)
 st.set_page_config(
-    page_title="Asistente Digital",
-    page_icon="⚡",
+    page_title="Asistente Convivencia",
+    page_icon="👬",
     layout="wide",
     initial_sidebar_state="collapsed",
     menu_items=None
@@ -123,7 +123,7 @@ def text_to_speech(text):
         return f"<div class='error'>Error al generar audio: {str(e)}</div>"
 
 # Título y descripción de la aplicación
-st.markdown("<h1 class='main-header'>Asistente SUME EnergyC</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-header'>Asistente Convivencia CEFA</h1>", unsafe_allow_html=True)
 
 # Pantalla de configuración inicial si aún no se ha configurado
 if not st.session_state.is_configured:
@@ -164,16 +164,16 @@ st.markdown("""
     </p>
     <ul style="list-style-type: none; padding-left: 0; margin-bottom: 1.5rem; font-family: 'Segoe UI', Arial, sans-serif;">
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Qué servicios presta SUME EnergyC en lo referente a Inteligencia artificial e Internet de las cosas?</span>
+            <span style="font-weight: 500; color: #BBDEFB;">¿Cual es la ley que determina los Manuales de convivencia?</span>
         </li>
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Puedes darme el consumo de Energía de las últimas 2 horas y su coste correspondiente?</span>
+            <span style="font-weight: 500; color: #BBDEFB;">¿Que se debe hacer en el caso de una pelea entre estudiantes?</span>
         </li>
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Puedes darme el gráfico de demanda de energía de la última hora?</span>
+            <span style="font-weight: 500; color: #BBDEFB;">¿Que sanciones implica el agredir a un compañero?</span>
         </li>
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Qué patrones de demanda de energía se han dado en la última hora?</span>
+            <span style="font-weight: 500; color: #BBDEFB;">¿Cual es el procedimiento en caso de ser testigo de un robo en el colegio?</span>
         </li>
     </ul>
 </div>
