@@ -164,16 +164,16 @@ st.markdown("""
     </p>
     <ul style="list-style-type: none; padding-left: 0; margin-bottom: 1.5rem; font-family: 'Segoe UI', Arial, sans-serif;">
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿¿Cuáles son los objetivos principales de la Ley 1620 de 2013?</span>
+            <span style="font-weight: 500; color: #BBDEFB;">¿Cuáles son los objetivos principales de la Ley 1620 de 2013?</span>
         </li>
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿cuál es la definición y el propósito principal del Manual de Convivencia?</span>
+            <span style="font-weight: 500; color: #BBDEFB;">¿Cuál es la definición y el propósito principal del Manual de Convivencia?</span>
         </li>
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
             <span style="font-weight: 500; color: #BBDEFB;">¿Que sanciones implica el agredir a un compañero?</span>
         </li>
         <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Carolina peréz golpea a Susana morales, en el salón de clase hoy 13 de mayo de 2025 a las 8:30 am argumentando que susana Morales la agredió verbalmente, el Profesor Rubén Palacio las separó, puedes elaborar el acta para este incidente?</span>
+            <span style="font-weight: 500; color: #BBDEFB;">¿Carolina peréz golpea a Susana morales, en el salón de clase hoy 13 de mayo de 2025 a las 8:30 am, argumentando que susana Morales la agredió verbalmente, el Profesor Rubén Palacio las separó, puedes elaborar el acta para este incidente?</span>
         </li>
     </ul>
 </div>
