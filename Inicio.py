@@ -18,7 +18,7 @@ st.set_page_config(
 )
 
 # Establecer tema claro mediante CSS personalizado
-st.markdown("""
+st.markdown(""", unsafe_allow_html=True)
 <style>
     /* Tema claro personalizado */
     body {
