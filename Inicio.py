@@ -8,7 +8,7 @@ import io
 from fpdf import FPDF
 import tempfile
 
-# Configuración de la página sin el parámetro theme (compatible con versiones anteriores)
+# Configuración de la página
 st.set_page_config(
     page_title="Asistente Convivencia",
     page_icon="👬",
@@ -17,45 +17,58 @@ st.set_page_config(
     menu_items=None
 )
 
-# Establecer tema oscuro mediante CSS personalizado para versiones anteriores
+# Establecer tema claro mediante CSS personalizado
 st.markdown("""
 <style>
-    /* Tema oscuro personalizado para versiones anteriores de Streamlit */
+    /* Tema claro personalizado */
     body {
-        color: #fafafa;
-        background-color: #0e1117;
+        color: #333333;
+        background-color: #f9f9f9;
     }
     .stApp {
-        background-color: #0e1117;
+        background-color: #f9f9f9;
     }
     .stTextInput>div>div>input {
-        background-color: #262730;
-        color: white;
+        background-color: #ffffff;
+        color: #333333;
+        border: 1px solid #dddddd;
     }
     .stSlider>div>div>div {
-        color: white;
+        color: #333333;
     }
     .stSelectbox>div>div>div {
-        background-color: #262730;
-        color: white;
+        background-color: #ffffff;
+        color: #333333;
     }
-
-    .css-1d391kg, .css-12oz5g7 {
-        background-color: #262730;
+    .stButton>button {
+        background-color: #2563EB;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.3s;
+    }
+    .stButton>button:hover {
+        background-color: #1E40AF;
     }
     
-    /* Estilos personalizados para el asistente - Todos los títulos en BLANCO */
+    /* Ajustes para la barra lateral */
+    .css-1d391kg, .css-12oz5g7 {
+        background-color: #ffffff;
+    }
+    
+    /* Estilos personalizados para el asistente */
     .main-header {
         font-size: 2.5rem;
-        color: #FFFFFF;
+        color: #1E3A8A;
         text-align: center;
         margin-bottom: 2rem;
         font-weight: bold;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
     .subheader {
         font-size: 1.5rem;
-        color: #FFFFFF;
+        color: #2563EB;
         margin-bottom: 1rem;
     }
     .audio-controls {
@@ -67,17 +80,54 @@ st.markdown("""
         position: fixed;
         bottom: 0;
         width: 100%;
-        background-color: #0e1117;
+        background-color: #f0f0f0;
         text-align: center;
         padding: 10px;
         font-size: 0.8rem;
+        color: #666666;
+        border-top: 1px solid #dddddd;
     }
-    /* Asegurar que todos los títulos en la barra lateral también sean blancos */
+    
+    /* Estilos para la barra lateral */
     .sidebar .sidebar-content h1, 
     .sidebar .sidebar-content h2, 
     .sidebar .sidebar-content h3,
     .css-1outpf7 {
-        color: #FFFFFF !important;
+        color: #1E3A8A !important;
+    }
+    
+    /* Estilo para los mensajes de chat */
+    .stChatMessage {
+        background-color: #f0f4ff;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    .stChatMessage.user {
+        background-color: #e6f0ff;
+    }
+    .stChatMessage.assistant {
+        background-color: #f0f4ff;
+    }
+    
+    /* Estilo para los mensajes info, error, success */
+    .stAlert {
+        background-color: #f8f9fa;
+        color: #333333;
+        border-radius: 4px;
+    }
+    
+    /* Ajustes para expanders y otros widgets */
+    .streamlit-expanderHeader {
+        background-color: #f0f4ff;
+        color: #1E3A8A;
+        border-radius: 4px;
+    }
+    
+    /* Estilo para code blocks */
+    .stCodeBlock {
+        background-color: #f5f7fa;
+        border: 1px solid #e2e8f0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -108,11 +158,11 @@ def text_to_speech(text):
         tts.write_to_fp(audio_buffer)
         audio_buffer.seek(0)
         
-        # Convertir a base64 para reproducir en HTML (sin autoplay)
+        # Convertir a base64 para reproducir en HTML
         audio_base64 = base64.b64encode(audio_buffer.read()).decode()
         audio_html = f'''
         <div class="audio-controls">
-            <audio controls>
+            <audio controls style="height: 40px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                 <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
                 Tu navegador no soporta el elemento de audio.
             </audio>
@@ -120,7 +170,7 @@ def text_to_speech(text):
         '''
         return audio_html
     except Exception as e:
-        return f"<div class='error'>Error al generar audio: {str(e)}</div>"
+        return f"<div style='color: #e53e3e; padding: 8px; background-color: #fff5f5; border-radius: 4px;'>Error al generar audio: {str(e)}</div>"
 
 # Título y descripción de la aplicación
 st.markdown("<h1 class='main-header'>Asistente Convivencia CEFA</h1>", unsafe_allow_html=True)
@@ -139,48 +189,50 @@ if not st.session_state.is_configured:
         help="Tu clave de acceso para autenticar las solicitudes"
     )
     
-    if st.button("Iniciar sesión"):
-        if not agent_access_key:
-            st.error("Por favor, ingresa la clave de acceso")
-        else:
-            # Guardar configuración en session_state
-            st.session_state.agent_access_key = agent_access_key
-            st.session_state.is_configured = True
-            st.success("Clave configurada")  # Cambio de mensaje aquí
-            time.sleep(1)  # Breve pausa para mostrar el mensaje de éxito
-            st.rerun()
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        if st.button("Iniciar sesión", use_container_width=True):
+            if not agent_access_key:
+                st.error("Por favor, ingresa la clave de acceso")
+            else:
+                # Guardar configuración en session_state
+                st.session_state.agent_access_key = agent_access_key
+                st.session_state.is_configured = True
+                st.success("Clave configurada correctamente")
+                time.sleep(1)  # Breve pausa para mostrar el mensaje de éxito
+                st.rerun()
     
     # Parar ejecución hasta que se configure
     st.stop()
 
 # Una vez configurado, mostrar la interfaz normal
-st.markdown("<p class='subheader'>Interactúa con tu asistente.</p>", unsafe_allow_html=True)
+st.markdown("<p class='subheader'>Interactúa con tu asistente de convivencia escolar.</p>", unsafe_allow_html=True)
 
-# Agregar ejemplos de preguntas con estilo profesional
+# Agregar ejemplos de preguntas con estilo profesional para tema claro
 st.markdown("""
 <div class="example-questions">
-    <p style="font-size: 0.9rem; color: #8EBBFF; margin-bottom: 1.5rem; font-style: italic; font-family: 'Segoe UI', Arial, sans-serif;">
+    <p style="font-size: 0.9rem; color: #2563EB; margin-bottom: 1.5rem; font-style: italic; font-family: 'Segoe UI', Arial, sans-serif;">
         Ejemplos de preguntas que puedes hacerle:
     </p>
     <ul style="list-style-type: none; padding-left: 0; margin-bottom: 1.5rem; font-family: 'Segoe UI', Arial, sans-serif;">
-        <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Cuáles son los objetivos principales de la Ley 1620 de 2013?</span>
+        <li style="margin-bottom: 0.8rem; padding: 0.8rem 1rem; background-color: rgba(37, 99, 235, 0.1); border-radius: 6px; border-left: 3px solid #2563EB; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <span style="font-weight: 500; color: #1E3A8A;">¿Cuáles son los objetivos principales de la Ley 1620 de 2013?</span>
         </li>
-        <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Cuál es la definición y el propósito principal del Manual de Convivencia?</span>
+        <li style="margin-bottom: 0.8rem; padding: 0.8rem 1rem; background-color: rgba(37, 99, 235, 0.1); border-radius: 6px; border-left: 3px solid #2563EB; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <span style="font-weight: 500; color: #1E3A8A;">¿Cuál es la definición y el propósito principal del Manual de Convivencia?</span>
         </li>
-        <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Que sanciones implica el agredir a un compañero?</span>
+        <li style="margin-bottom: 0.8rem; padding: 0.8rem 1rem; background-color: rgba(37, 99, 235, 0.1); border-radius: 6px; border-left: 3px solid #2563EB; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <span style="font-weight: 500; color: #1E3A8A;">¿Qué sanciones implica el agredir a un compañero?</span>
         </li>
-        <li style="margin-bottom: 0.8rem; padding: 0.5rem 0.8rem; background-color: rgba(30, 136, 229, 0.1); border-radius: 4px; border-left: 3px solid #FF9800;">
-            <span style="font-weight: 500; color: #BBDEFB;">¿Carolina peréz golpea a Susana morales, en el salón de clase hoy 13 de mayo de 2025 a las 8:30 am, argumentando que susana Morales la agredió verbalmente, el Profesor Rubén Palacio las separó, puedes elaborar el acta para este incidente?</span>
+        <li style="margin-bottom: 0.8rem; padding: 0.8rem 1rem; background-color: rgba(37, 99, 235, 0.1); border-radius: 6px; border-left: 3px solid #2563EB; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <span style="font-weight: 500; color: #1E3A8A;">¿Carolina peréz golpea a Susana morales, en el salón de clase hoy 13 de mayo de 2025 a las 8:30 am, argumentando que susana Morales la agredió verbalmente, el Profesor Rubén Palacio las separó, puedes elaborar el acta para este incidente?</span>
         </li>
     </ul>
 </div>
 """, unsafe_allow_html=True)
 
 # Sidebar para configuración
-st.sidebar.title("Configuración")
+st.sidebar.markdown("<h2 style='color: #1E3A8A;'>Configuración</h2>", unsafe_allow_html=True)
 
 # Mostrar información de conexión actual
 st.sidebar.success("✅ Configuración cargada")
@@ -255,7 +307,7 @@ with st.sidebar.expander("Probar conexión"):
                 st.error(f"Error al verificar endpoint: {str(e)}")
 
 # Opciones de gestión de conversación
-st.sidebar.markdown("### Gestión de conversación")
+st.sidebar.markdown("<h3 style='color: #2563EB;'>Gestión de conversación</h3>", unsafe_allow_html=True)
 
 # Botón para limpiar conversación
 if st.sidebar.button("🗑️ Limpiar conversación"):
@@ -287,7 +339,7 @@ if st.sidebar.button("💾 Guardar conversación en PDF"):
             pdf.set_text_color(0, 0, 255)  # Azul para usuario
             pdf.cell(200, 10, "Usuario:", ln=True)
         else:
-            pdf.set_text_color(0, 128, 0)  # Verde para asistente
+            pdf.set_text_color(37, 99, 235)  # Azul para asistente (tema claro)
             pdf.cell(200, 10, "Asistente:", ln=True)
         
         pdf.set_text_color(0, 0, 0)  # Negro para el contenido
@@ -310,7 +362,7 @@ if st.sidebar.button("💾 Guardar conversación en PDF"):
     st.sidebar.download_button(
         label="Descargar PDF",
         data=pdf_data,
-        file_name="conversacion.pdf",
+        file_name="conversacion_convivencia.pdf",
         mime="application/pdf",
     )
 
@@ -424,27 +476,45 @@ def query_agent(prompt, history=None):
     except Exception as e:
         return {"error": f"Error al comunicarse con el asistente: {str(e)}"}
 
-# Mostrar historial de conversación
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        # Procesar mensajes del historial para extraer imágenes
-        if message["role"] == "assistant":
-            content = message["content"]
-            simplified_text, image_urls = extract_and_process_images(content)
-            st.markdown(simplified_text)
-            
-            # Mostrar solo enlaces para imágenes del historial
-            if image_urls:
-                for idx, img_url in enumerate(image_urls):
-                    st.markdown(f"[Ver gráfico en pestaña nueva]({img_url})")
-        else:
-            st.markdown(message["content"])
+# Crear un contenedor para el historial de chat con un estilo mejorado
+chat_container = st.container()
+with chat_container:
+    # Mostrar historial de conversación
+    for message in st.session_state.messages:
+        # Aplicar estilos diferentes según el rol
+        role_style = "user" if message["role"] == "user" else "assistant"
         
-        # Si es un mensaje del asistente y tiene audio asociado, mostrarlo
-        if message["role"] == "assistant" and "audio_html" in message:
-            st.markdown(message["audio_html"], unsafe_allow_html=True)
+        with st.chat_message(message["role"]):
+            # Procesar mensajes del historial para extraer imágenes
+            if message["role"] == "assistant":
+                content = message["content"]
+                simplified_text, image_urls = extract_and_process_images(content)
+                st.markdown(simplified_text)
+                
+                # Mostrar las imágenes encontradas
+                if image_urls:
+                    for idx, img_url in enumerate(image_urls):
+                        # Crear un enlace estilizado para el tema claro
+                        st.markdown(f"""
+                        <a href="{img_url}" target="_blank" style="display: inline-block; margin: 5px 0; padding: 8px 12px; background-color: #e0f2fe; color: #2563EB; border-radius: 4px; text-decoration: none; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                            <span style="display: flex; align-items: center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                Ver gráfico en nueva pestaña
+                            </span>
+                        </a>
+                        """, unsafe_allow_html=True)
+            else:
+                st.markdown(message["content"])
+            
+            # Si es un mensaje del asistente y tiene audio asociado, mostrarlo
+            if message["role"] == "assistant" and "audio_html" in message:
+                st.markdown(message["audio_html"], unsafe_allow_html=True)
 
-# Campo de entrada para el mensaje
+# Campo de entrada para el mensaje con estilo mejorado
 prompt = st.chat_input("Escribe tu pregunta aquí...")
 
 # Procesar la entrada del usuario
@@ -461,7 +531,7 @@ if prompt:
     
     # Mostrar indicador de carga mientras se procesa
     with st.chat_message("assistant"):
-        with st.spinner("Pensando..."):
+        with st.spinner("Analizando tu consulta..."):
             # Enviar consulta al agente
             response = query_agent(prompt, api_history)
             
@@ -487,11 +557,19 @@ if prompt:
                 # Mostrar las imágenes encontradas
                 if image_urls:
                     for idx, img_url in enumerate(image_urls):
-                        # Solo mostrar el enlace, sin intentar mostrar la imagen
-                        if '/chart?' in img_url:
-                            st.markdown(f"[Ver gráfico en pestaña nueva]({img_url})")
-                        else:
-                            st.markdown(f"[Abrir en nueva pestaña]({img_url})")
+                        # Crear un enlace estilizado para el tema claro
+                        st.markdown(f"""
+                        <a href="{img_url}" target="_blank" style="display: inline-block; margin: 5px 0; padding: 8px 12px; background-color: #e0f2fe; color: #2563EB; border-radius: 4px; text-decoration: none; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                            <span style="display: flex; align-items: center;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                Ver gráfico en nueva pestaña
+                            </span>
+                        </a>
+                        """, unsafe_allow_html=True)
                 
                 # Generar audio (siempre)
                 audio_html = None
@@ -505,5 +583,13 @@ if prompt:
                     message_data["audio_html"] = audio_html
                 st.session_state.messages.append(message_data)
 
-# Pie de página
-st.markdown("<div class='footer'>Asistente Digital © 2025</div>", unsafe_allow_html=True)
+# Pie de página con estilo mejorado
+st.markdown("""
+<div class='footer'>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+        <span>Asistente Digital CEFA © 2025</span>
+        <span style="color: #2563EB; font-size: 18px;">|</span>
+        <span>Centro Formativo de Antioquia</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
