@@ -592,4 +592,4 @@ st.markdown("""
         <span>Centro Formativo de Antioquia</span>
     </div>
 </div>
-""", unsafe_allow_html=True)
+
