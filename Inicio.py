@@ -252,7 +252,7 @@ st.markdown("""
         <span>¿Qué sanciones implica el agredir a un compañero?</span>
     </div>
     <div class="example-question">
-        <span>¿Carolina peréz golpea a Susana morales, en el salón de clase hoy 13 de mayo de 2025 a las 8:30 am, argumentando que susana Morales la agredió verbalmente, el Profesor Rubén Palacio las separó, puedes elaborar el acta para este incidente?</span>
+        <span>Carolina pérez golpea a Susana morales, en el salón de clase hoy 13 de mayo de 2025 a las 8:30 am, argumentando que susana Morales la agredió verbalmente, el Profesor Rubén Palacio las separó, ¿puedes elaborar el acta para este incidente?</span>
     </div>
 </div>
 <div class='cefa-decoration'></div>
